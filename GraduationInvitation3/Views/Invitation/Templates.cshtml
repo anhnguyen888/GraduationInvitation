@@ -1,0 +1,32 @@
+﻿<!-- Views/Invitation/Templates.cshtml -->
+<div class="container">
+    <h2>Quản lý mẫu thư mời</h2>
+    <form asp-action="UploadTemplate" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Tải mẫu thư mời</label>
+            <input type="file" name="TemplateFile" class="form-control" accept=".jpg,.png" />
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+
+    <h3 class="mt-4">Các mẫu thư mời</h3>
+    <div class="row">
+        @foreach (var template in ViewBag.Templates)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="~/templates/@template" class="card-img-top" alt="@template">
+                    <div class="card-body">
+                        <h5 class="card-title">@template</h5>
+                        <form asp-action="SetDefaultTemplate" method="post">
+                            <input type="hidden" name="templateName" value="@template" />
+                            <button type="submit" class="btn btn-sm @(template == ViewBag.DefaultTemplate ? "btn-success" : "btn-outline-primary")">
+                                @(template == ViewBag.DefaultTemplate ? "Mẫu mặc định" : "Đặt mặc định")
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Preview Invitation";
+    var imagePath = ViewData["ImagePath"] as string;
+}
+
+<div class="container">
+    <h2 class="text-center mb-4">Xem trước thư mời</h2>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        <img src="~/generated/@imagePath" class="img-fluid mb-3" alt="Generated Invitation" />
+
+                        <div class="btn-group">
+                            <a href="@Url.Action("Download", new { fileName = imagePath })" class="btn btn-primary">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                            <button onclick="shareInvitation()" class="btn btn-success">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            No invitation image was generated.
+                        </div>
+                    }
+
+                    <div class="mt-3">
+                        <a href="@Url.Action("Create")" class="btn btn-outline-secondary">
+                            Tiếp tục tạo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function shareInvitation() {
+            try {
+                if (navigator.share) {
+                    await navigator.share({
+                        title: 'Graduation Invitation',
+                        text: 'Check out my graduation invitation!',
+                        url: window.location.href
+                    });
+                } else {
+                    // Fallback for browsers that don't support Web Share API
+                    const tempInput = document.createElement('input');
+                    tempInput.value = window.location.href;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    alert('Link copied to clipboard!');
+                }
+            } catch (error) {
+                console.error('Error sharing:', error);
+                alert('Unable to share at this time.');
+            }
+        }
+    </script>
+}
